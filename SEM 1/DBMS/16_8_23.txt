@@ -1,0 +1,120 @@
+16/08/2023
+
+SQL> create table course(cid varchar2(10),cname varchar2(20), dur int);
+
+Table created.
+
+SQL> create table dep(did varchar2(10),dcname varchar2(2));
+
+Table created.
+
+SQL> alter table course add primary key(cid);
+
+Table altered.
+
+SQL> alter table dep add primary key(did);
+
+Table altered.
+
+SQL> alter table student add cid references course(cid);
+
+Table altered.
+
+SQL> alter table course add did references dep(did);
+
+Table altered.
+
+SQL> insert into dep values('10001','computer science');
+
+1 row created.
+
+SQL> insert into dep values('10002','social work');
+
+1 row created.
+
+SQL> insert into dep values('10003','statistics');
+
+1 row created.
+
+SQL> insert into course values('2001','mca',2,'10001');
+
+1 row created.
+
+SQL> insert into course values('2002','msc',2,'10002');
+
+1 row created.
+
+SQL> insert into course values('2003','bsw',3,'10002');
+
+1 row created.
+
+SQL> insert into course values('2004','bsc_stat',3,'10003');
+
+1 row created.
+
+SQL> insert into student values('3001','rose','F','2002');
+
+1 row created.
+
+SQL> insert into student values('3002','adithya','F','2003');
+
+1 row created.
+
+SQL> insert into student values('3003','rohit','M','2002');
+
+1 row created.
+
+SQL> insert into student values('3004','tom','M','2003');
+
+1 row created.
+
+SQL> insert into student values('3005','abhonav','M','2004');
+
+1 row created.
+
+// select student name and departname and display
+SQL> select sname, dcname from dep d,course c,student s where s.cid=c.cid and c.did=d.did;
+
+SNAME                DCNAME
+-------------------- ------------------------------
+rose                 social work
+adithya              social work
+rohit                social work
+tom                  social work
+abhonav              statistics
+
+INNER JOIN
+
+SQL> select sname, cname from student s, course c where s.cid=c.cid;
+
+SNAME                CNAME
+-------------------- --------------------
+rose                 msc
+adithya              bsw
+rohit                msc
+tom                  bsw
+abhonav              bsc_stat
+
+//this can be wriiten using inner join
+SQL> select sname, cname from student s inner join course c on s.cid=c.cid;
+
+SNAME                CNAME
+-------------------- --------------------
+rose                 msc
+adithya              bsw
+rohit                msc
+tom                  bsw
+abhonav              bsc_stat
+
+//natural join - it joins without condition it automatically finds
+
+SQL> select sname, cname from student s natural join course c ;
+
+SNAME                CNAME
+-------------------- --------------------
+rose                 msc
+adithya              bsw
+rohit                msc
+tom                  bsw
+abhonav              bsc_stat
+
