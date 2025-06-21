@@ -1,0 +1,82 @@
+SQL> create table customer( cust_id varchar(5) primary key,cust_name varchar(20), cust_location varchar(20),cust_gender varchar(2), check(cust_id like 'C%'));
+
+Table created.
+SQL> alter table customer add check(cust_gender in('F','M'));
+
+Table altered.
+SQL> create table branch(br_id varchar(10) primary key check(br_id like 'B%'), br_location varchar(20));
+
+Table created.
+SQL> create table accounts(acc_no varchar(10) primary key check(acc_no like 'A%'), acc_type varchar(5) check(acc_type in('SB','CU')), acc_balance int check(acc_balance>1000), cust_id varchar(5) references customer(cust_id),br_id varchar(10) references branch(br_id));
+
+Table created.
+
+SQL> insert into customer values('C100','Veena Rajiv','Mumbai','F');
+
+1 row created.
+
+SQL> insert into customer values('C101','Satheesh S','Kerala','M');
+
+1 row created.
+
+SQL> insert into customer values('C102','Ram K R','Tamilnadu','M');
+
+1 row created.
+
+SQL> insert into customer values('C103','Anand V','Kerala','M');
+
+1 row created.
+SQL> insert into branch values('B1','Mumbai');
+
+1 row created.
+
+SQL> insert into branch values('B2','Kolkatta');
+
+1 row created.
+
+SQL> insert into branch values('B3','Kochi');
+
+1 row created.
+SQL> insert into accounts values('A5000','SB',20000,'C100','B1');
+
+1 row created.
+
+SQL> insert into accounts values('A5001','SB',1500,'C101','B3');
+
+1 row created.
+
+SQL> insert into accounts values('A5002','CU',63000,'C100','B1');
+
+1 row created.
+
+SQL> insert into accounts values('A5003','SB',25000,'C102','B1');
+
+1 row created.
+SQL> select cust_name from customer where cust_gender='M' and cust_location='Kerala';
+
+CUST_NAME
+--------------------
+Satheesh S
+Anand V
+
+SQL> select cust_name from customer c,accounts a where c.cust_id=a.cust_id and acc_type='CU';
+
+CUST_NAME
+--------------------
+Veena Rajiv
+
+SQL> select cust_name from customer c,accounts a,branch b where c.cust_id=a.cust_id and a.br_id=b.br_id and br_location like 'K%';
+
+CUST_NAME
+--------------------
+Satheesh S
+
+SQL> select br_location from branch where br_id in (select br_id from accounts group by br_id having count(*)>2);
+
+BR_LOCATION
+--------------------
+Mumbai
+
+SQL> select cust_name from customer c, accounts a where c.cust_id=a.cust_id and acc_type='SB' and acc_balance>(select avg(acc_balance) from accounts);
+
+no rows selected
